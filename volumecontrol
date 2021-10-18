@@ -1,0 +1,38 @@
+#!/bin/bash
+#
+# control the volume with arguments
+# up - raise volume
+# down - lower volume
+# mute - mute
+# or supply a value to set the volume to (e.g 30%)
+#
+function get_volume {
+    echo $(pactl get-sink-volume @DEFAULT_SINK@ | awk '{print $5}' | sed 's/\%//')
+}
+function notify {
+    bar=$(seq -s '🬋' $((`get_volume` / 5)) | sed 's/[0-9]//g')
+    dunstify -u low -r 12345 "$(get_volume)%" "$bar"
+}
+
+case "$1" in
+    up)
+        [ `get_volume` -lt 100 ] && pactl set-sink-volume @DEFAULT_SINK@ +5%
+        notify
+        ;;
+    down)
+        pactl set-sink-volume @DEFAULT_SINK@ -5%
+        notify
+        ;;
+    mute)
+        muted=$(pactl get-sink-mute @DEFAULT_SINK@ | awk '{print $NF}')
+        if [ "$muted" == "yes" ]; then
+            pactl set-sink-mute @DEFAULT_SINK@ false && \
+            dunstify -u low -r 12345 "Volume unmuted"
+        else
+            pactl set-sink-mute @DEFAULT_SINK@ true && \
+            dunstify -u low -r 12345 "Volume muted"
+        fi;;
+    *)
+        pactl set-sink-volume @DEFAULT_SINK@ $1 && \
+        notify
+esac

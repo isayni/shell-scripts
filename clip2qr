@@ -1,0 +1,6 @@
+#!/bin/bash
+#
+# display a QR code out of the clipboard contents
+#
+xclip -o -sel clipboard | qrencode -s 15 -o /tmp/qr.png && \
+sxiv -bf /tmp/qr.png &
