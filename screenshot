@@ -1,0 +1,6 @@
+#!/bin/sh
+
+FILENAME="/tmp/screenshot.png"
+mss -q -m 1 -o "$FILENAME"
+xclip -selection clipboard -t image/png -i "$FILENAME"
+notify-send "Screenshot captured"

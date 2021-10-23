@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 # display a QR code out of the clipboard contents
 #
