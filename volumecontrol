@@ -6,21 +6,21 @@
 # mute - mute
 # or supply a value to set the volume to (e.g 30%)
 #
-function get_volume {
+get_volume() {
     echo $(pactl get-sink-volume @DEFAULT_SINK@ | awk '{print $5}' | sed 's/\%//')
 }
-function notify {
+notify() {
     bar=$(seq -s '🬋' $((`get_volume` / 5)) | sed 's/[0-9]//g')
     dunstify -u low -r 12345 "$(get_volume)%" "$bar"
 }
 
 case "$1" in
     up)
-        [ `get_volume` -lt 100 ] && pactl set-sink-volume @DEFAULT_SINK@ +5%
+        [ `get_volume` -lt 100 ] && pactl set-sink-volume @DEFAULT_SINK@ +2%
         notify
         ;;
     down)
-        pactl set-sink-volume @DEFAULT_SINK@ -5%
+        pactl set-sink-volume @DEFAULT_SINK@ -2%
         notify
         ;;
     mute)
