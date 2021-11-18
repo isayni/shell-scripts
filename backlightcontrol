@@ -1,0 +1,25 @@
+#!/bin/bash
+#
+# control the backlight brightness with arguments
+# up - increase brightness
+# down - decrease brightness
+# or supply a value to set the brightness to (e.g 30%)
+#
+get_brightness() {
+    xbacklight | awk '{ split($0,a,"."); print a[1]}'
+}
+notify() {
+    bar=$(seq -s '🬋' $((`get_brightness` / 5)) | sed 's/[0-9]//g')
+    dunstify -u low -r 123 "$(get_brightness)%" "$bar"
+}
+
+case "$1" in
+    up)
+        xbacklight +5 && notify
+        ;;
+    down)
+        xbacklight -5 && notify
+        ;;
+    *)
+        xbacklight -set $1 && notify
+esac
