@@ -10,7 +10,7 @@ get_volume() {
     echo $(pactl get-sink-volume @DEFAULT_SINK@ | awk '{print $5}' | sed 's/\%//')
 }
 notify() {
-    bar=$(seq -s '🬋' $((`get_volume` / 5)) | sed 's/[0-9]//g')
+    bar=$(seq -s '▃' $((`get_volume` / 5)) | sed 's/[0-9]//g')
     dunstify -u low -r 12345 "$(get_volume)%" "$bar"
 }
 

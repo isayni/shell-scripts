@@ -9,7 +9,7 @@ get_brightness() {
     xbacklight | awk '{ split($0,a,"."); print a[1]}'
 }
 notify() {
-    bar=$(seq -s '🬋' $((`get_brightness` / 5)) | sed 's/[0-9]//g')
+    bar=$(seq -s '▃' $((`get_brightness` / 5)) | sed 's/[0-9]//g')
     dunstify -u low -r 123 "$(get_brightness)%" "$bar"
 }
 
