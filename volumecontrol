@@ -32,6 +32,16 @@ case "$1" in
             pactl set-sink-mute @DEFAULT_SINK@ true && \
             dunstify -u low -r 12345 "Volume muted"
         fi;;
+    mic)
+        source=$(pactl get-default-source)
+        muted=$(pactl get-source-mute $source | awk '{print $NF}')
+        if [ "$muted" == "yes" ]; then
+            pactl set-source-mute $source false && \
+            dunstify -u low -r 12345 "Mic unmuted"
+        else
+            pactl set-source-mute $source true && \
+            dunstify -u low -r 12345 "Mic muted"
+        fi;;
     *)
         pactl set-sink-volume @DEFAULT_SINK@ $1 && \
         notify
