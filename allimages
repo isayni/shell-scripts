@@ -1,0 +1,4 @@
+#!/bin/sh
+# open all images found in the given directory and deeper
+
+find $1 -type f -printf "\"%p\"\n" | shuf | head -1000 | xargs sxiv
