@@ -1,0 +1,25 @@
+#!/bin/bash
+# record a gif of a rectangular screen selection
+# requires ImageMagick, ffmpeg, yad
+
+eval "$( import - | awk '
+    /^DisplayImage$/{
+        getline
+        print "X=" $1
+        print "Y=" $2
+        getline
+        print "W=" $1
+        print "H=" $2
+        exit
+        }'
+    )"
+
+ffmpeg -f x11grab -s "$W"x"$H" -r 12 -i :0.0+"$X","$Y" -vf scale=w=iw/2:h=ih/2 -t 30 $EPOCHSECONDS.gif &
+pid=$!
+
+# click the tray icon to stop recording
+yad --notification --command="kill $pid" &
+yadpid=$!
+
+wait $pid
+kill $yadpid
